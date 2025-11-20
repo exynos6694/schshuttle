@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { Bus } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -25,7 +26,7 @@ export const Header: React.FC = () => {
             {format(time, 'HH:mm')}
           </div>
           <div className="text-blue-100 text-xs font-medium">
-            {format(time, 'MM.dd EEEE')}
+            {format(time, 'MM.dd EEEE', { locale: ko })}
           </div>
         </div>
       </div>

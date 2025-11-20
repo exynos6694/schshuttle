@@ -13,7 +13,7 @@ export const RouteSelector: React.FC<RouteSelectorProps> = ({ currentRoute, onSe
   const tabs: { id: Route; label: string }[] = [
     { id: 'to_station', label: 'To Station' },
     { id: 'to_school', label: 'To School' },
-    { id: 'loop', label: 'Campus Loop' },
+    { id: 'loop', label: '학내순환' },
   ];
 
   return (
