@@ -19,7 +19,7 @@ export const Header: React.FC = () => {
             <Bus className="w-6 h-6" />
             SCH Shuttle
           </h1>
-          <p className="text-blue-100 text-sm mt-1">Soonchunhyang Univ.</p>
+          <p className="text-blue-100 text-sm mt-1">순천향대학교.</p>
         </div>
         <div className="text-right">
           <div className="text-3xl font-bold tracking-tight">

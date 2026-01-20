@@ -22,7 +22,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
   return (
     <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3 pb-20">
       <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-4 px-2">
-        Upcoming Schedule
+        예정 시간표
       </h3>
       
       {schedule.map((bus, idx) => {
@@ -51,7 +51,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
                 </span>
                 {bus.trainTime && (
                   <span className="text-xs text-slate-400">
-                    Train: {bus.trainTime}
+                    지하철: {bus.trainTime}
                   </span>
                 )}
               </div>

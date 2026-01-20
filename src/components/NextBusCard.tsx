@@ -26,7 +26,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
     return (
       <div className="mx-4 mt-4 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 flex flex-col items-center justify-center text-slate-400 min-h-[200px]">
         <AlertCircle className="w-12 h-12 mb-2 opacity-50" />
-        <p>No buses remaining today</p>
+        <p>버스 운행이 종료되었습니다</p>
       </div>
     );
   }
@@ -50,13 +50,13 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
 
         <div className="flex items-baseline mt-2">
           {isDeparting ? (
-             <span className="text-4xl font-bold text-red-500">Departing</span>
+             <span className="text-4xl font-bold text-red-500">출발함</span>
           ) : (
             <>
               <span className="text-6xl font-bold text-slate-900 tracking-tighter">
                 {timeLeft}
               </span>
-              <span className="text-xl text-slate-500 ml-2 font-medium">min left</span>
+              <span className="text-xl text-slate-500 ml-2 font-medium">분 뒤</span>
             </>
           )}
         </div>
@@ -71,7 +71,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
             />
           </div>
           <p className="text-xs text-slate-400 mt-2 text-right">
-            Based on {nextBus.type === 'to_school' ? 'train arrival' : 'schedule'}
+            {nextBus.type === 'to_school' ? '지하철 시간표 기반' : '학교 시간표 기반'}
           </p>
         </div>
       </motion.div>
