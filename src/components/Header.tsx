@@ -3,7 +3,12 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Bus } from 'lucide-react';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  isVacation: boolean;
+  onToggleVacation: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ isVacation, onToggleVacation }) => {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -19,7 +24,19 @@ export const Header: React.FC = () => {
             <Bus className="w-6 h-6" />
             SCH Shuttle
           </h1>
-          <p className="text-blue-100 text-sm mt-1">순천향대학교.</p>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-blue-100 text-sm">순천향대학교</p>
+            <button
+              onClick={onToggleVacation}
+              className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
+                isVacation 
+                  ? 'bg-blue-400 border-transparent text-white font-bold' 
+                  : 'border-blue-200 text-blue-200 hover:bg-white/10'
+              }`}
+            >
+              {isVacation ? '방학중' : '학기중'}
+            </button>
+          </div>
         </div>
         <div className="text-right">
           <div className="text-3xl font-bold tracking-tight">

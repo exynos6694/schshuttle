@@ -4,11 +4,12 @@ import { Header } from './components/Header';
 import { RouteSelector, type Route } from './components/RouteSelector';
 import { NextBusCard } from './components/NextBusCard';
 import { TimeTable } from './components/TimeTable';
-import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, getLoopSchedule } from './data/schedule';
+import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, getLoopSchedule } from './data/schedule';
 import { getNextBus } from './utils/timeUtils';
 
 function App() {
   const [route, setRoute] = useState<Route>('to_station');
+  const [isVacation, setIsVacation] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -19,21 +20,22 @@ function App() {
   const schedule = useMemo(() => {
     switch (route) {
       case 'to_station':
-        return TO_STATION_SCHEDULE;
+        return isVacation ? VACATION_TO_STATION_SCHEDULE : TO_STATION_SCHEDULE;
       case 'to_school':
-        return TO_SCHOOL_SCHEDULE;
+        return isVacation ? VACATION_TO_SCHOOL_SCHEDULE : TO_SCHOOL_SCHEDULE;
       case 'loop':
-        return getLoopSchedule();
+        // No loop schedule during vacation
+        return isVacation ? [] : getLoopSchedule();
       default:
         return [];
     }
-  }, [route]);
+  }, [route, isVacation]);
 
   const nextBus = useMemo(() => getNextBus(schedule, currentTime), [schedule, currentTime]);
 
   return (
     <Layout>
-      <Header />
+      <Header isVacation={isVacation} onToggleVacation={() => setIsVacation(prev => !prev)} />
       <RouteSelector currentRoute={route} onSelect={setRoute} />
       <NextBusCard nextBus={nextBus} />
       <TimeTable schedule={schedule} nextBus={nextBus} />
