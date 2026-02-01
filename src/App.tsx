@@ -7,6 +7,8 @@ import { TimeTable } from './components/TimeTable';
 import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, getLoopSchedule } from './data/schedule';
 import { getNextBus } from './utils/timeUtils';
 
+import { Footer } from './components/Footer';
+
 function App() {
   const [route, setRoute] = useState<Route>('to_station');
   const [isVacation, setIsVacation] = useState(true);
@@ -37,8 +39,11 @@ function App() {
     <Layout>
       <Header isVacation={isVacation} onToggleVacation={() => setIsVacation(prev => !prev)} />
       <RouteSelector currentRoute={route} onSelect={setRoute} />
-      <NextBusCard nextBus={nextBus} />
-      <TimeTable schedule={schedule} nextBus={nextBus} />
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <NextBusCard nextBus={nextBus} />
+        <TimeTable schedule={schedule} nextBus={nextBus} />
+      </div>
+      <Footer />
     </Layout>
   );
 }
