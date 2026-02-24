@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 import type { ShuttleTime } from '../data/schedule';
-import { getTimeRemaining, formatBusTime } from '../utils/timeUtils';
+import { getTimeRemaining, formatBusTime, isServiceDay } from '../utils/timeUtils';
 
 interface NextBusCardProps {
   nextBus: ShuttleTime | null;
@@ -21,6 +21,15 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
     const timer = setInterval(update, 1000 * 30); // Update every 30s
     return () => clearInterval(timer);
   }, [nextBus]);
+
+  if (!isServiceDay(new Date())) {
+    return (
+      <div className="mx-4 mt-4 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 flex flex-col items-center justify-center text-slate-400 min-h-[200px]">
+        <AlertCircle className="w-12 h-12 mb-2 opacity-50" />
+        <p>주말 및 공휴일은 운행하지 않습니다</p>
+      </div>
+    );
+  }
 
   if (!nextBus) {
     return (

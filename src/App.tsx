@@ -5,7 +5,7 @@ import { RouteSelector, type Route } from './components/RouteSelector';
 import { NextBusCard } from './components/NextBusCard';
 import { TimeTable } from './components/TimeTable';
 import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, getLoopSchedule } from './data/schedule';
-import { getNextBus } from './utils/timeUtils';
+import { getNextBus, isServiceDay } from './utils/timeUtils';
 
 import { Footer } from './components/Footer';
 
@@ -20,6 +20,10 @@ function App() {
   }, []);
 
   const schedule = useMemo(() => {
+    if (!isServiceDay(currentTime)) {
+      return [];
+    }
+    
     switch (route) {
       case 'to_station':
         return isVacation ? VACATION_TO_STATION_SCHEDULE : TO_STATION_SCHEDULE;
@@ -31,7 +35,7 @@ function App() {
       default:
         return [];
     }
-  }, [route, isVacation]);
+  }, [route, isVacation, currentTime]);
 
   const nextBus = useMemo(() => getNextBus(schedule, currentTime), [schedule, currentTime]);
 
