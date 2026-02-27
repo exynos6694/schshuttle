@@ -50,8 +50,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
                   {formatBusTime(bus)}
                 </span>
                 {bus.trainTime && (
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
                     지하철: {bus.trainTime}
+                    {bus.destination && <span>({bus.destination})</span>}
+                    {bus.isExpress && <span className="text-red-500 font-bold ml-1">급행</span>}
                   </span>
                 )}
               </div>

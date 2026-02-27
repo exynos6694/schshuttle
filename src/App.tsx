@@ -6,6 +6,7 @@ import { NextBusCard } from './components/NextBusCard';
 import { TimeTable } from './components/TimeTable';
 import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, getLoopSchedule } from './data/schedule';
 import { getNextBus, isServiceDay } from './utils/timeUtils';
+import { RouteMapModal } from './components/RouteMapModal';
 
 import { Footer } from './components/Footer';
 
@@ -13,6 +14,7 @@ function App() {
   const [route, setRoute] = useState<Route>('to_station');
   const [isVacation, setIsVacation] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isMapOpen, setIsMapOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000 * 30);
@@ -41,13 +43,18 @@ function App() {
 
   return (
     <Layout>
-      <Header isVacation={isVacation} onToggleVacation={() => setIsVacation(prev => !prev)} />
+      <Header 
+        isVacation={isVacation} 
+        onToggleVacation={() => setIsVacation(prev => !prev)} 
+        onOpenMap={() => setIsMapOpen(true)}
+      />
       <RouteSelector currentRoute={route} onSelect={setRoute} />
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <NextBusCard nextBus={nextBus} />
         <TimeTable schedule={schedule} nextBus={nextBus} />
       </div>
       <Footer />
+      <RouteMapModal isOpen={isMapOpen} onClose={() => setIsMapOpen(false)} />
     </Layout>
   );
 }

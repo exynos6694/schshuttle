@@ -52,8 +52,20 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
       >
         <div className="flex justify-between items-start mb-2">
           <span className="text-slate-500 font-medium text-sm uppercase tracking-wider">Next Bus</span>
-          <div className="bg-blue-50 text-primary px-3 py-1 rounded-full text-xs font-bold">
-            {formatBusTime(nextBus)}
+          <div className="flex gap-1.5 items-center">
+            {nextBus.isExpress && (
+              <div className="bg-red-50 text-red-600 px-2.5 py-1 rounded-full text-[10px] font-bold">
+                급행
+              </div>
+            )}
+            {nextBus.destination && (
+              <div className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full text-[10px] font-bold">
+                {nextBus.destination}
+              </div>
+            )}
+            <div className="bg-blue-50 text-primary px-3 py-1 rounded-full text-xs font-bold">
+              {formatBusTime(nextBus)}
+            </div>
           </div>
         </div>
 

@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { Bus } from 'lucide-react';
+import { Bus, Map } from 'lucide-react';
 
 interface HeaderProps {
   isVacation: boolean;
   onToggleVacation: () => void;
+  onOpenMap: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ isVacation, onToggleVacation }) => {
+export const Header: React.FC<HeaderProps> = ({ isVacation, onToggleVacation, onOpenMap }) => {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -38,12 +39,21 @@ export const Header: React.FC<HeaderProps> = ({ isVacation, onToggleVacation }) 
             </button>
           </div>
         </div>
-        <div className="text-right">
-          <div className="text-3xl font-bold tracking-tight">
-            {format(time, 'HH:mm')}
-          </div>
-          <div className="text-blue-100 text-xs font-medium">
-            {format(time, 'MM.dd EEEE', { locale: ko })}
+        <div className="flex flex-col items-end gap-2">
+          <button 
+            onClick={onOpenMap}
+            className="p-2 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-sm transition-colors"
+            title="노선도 보기"
+          >
+            <Map className="w-5 h-5 text-white" />
+          </button>
+          <div className="text-right">
+            <div className="text-3xl font-bold tracking-tight">
+              {format(time, 'HH:mm')}
+            </div>
+            <div className="text-blue-100 text-xs font-medium">
+              {format(time, 'MM.dd EEEE', { locale: ko })}
+            </div>
           </div>
         </div>
       </div>
