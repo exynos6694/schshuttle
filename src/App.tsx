@@ -4,15 +4,16 @@ import { Header } from './components/Header';
 import { RouteSelector, type Route } from './components/RouteSelector';
 import { NextBusCard } from './components/NextBusCard';
 import { TimeTable } from './components/TimeTable';
-import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, getLoopSchedule } from './data/schedule';
+import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, WEEKEND_TO_SCHOOL_SCHEDULE, WEEKEND_TO_STATION_SCHEDULE, getLoopSchedule } from './data/schedule';
 import { getNextBus, isServiceDay } from './utils/timeUtils';
 import { RouteMapModal } from './components/RouteMapModal';
+import { isWeekend } from 'date-fns';
 
 import { Footer } from './components/Footer';
 
 function App() {
   const [route, setRoute] = useState<Route>('to_station');
-  const [isVacation, setIsVacation] = useState(true);
+  const [isVacation, setIsVacation] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isMapOpen, setIsMapOpen] = useState(false);
 
@@ -26,6 +27,19 @@ function App() {
       return [];
     }
     
+    // 주말일 경우 주말 시간표 반환 (루프버스는 주말 미운행으로 간주)
+    if (isWeekend(currentTime)) {
+      switch (route) {
+        case 'to_station':
+          return WEEKEND_TO_STATION_SCHEDULE;
+        case 'to_school':
+          return WEEKEND_TO_SCHOOL_SCHEDULE;
+        case 'loop':
+        default:
+          return [];
+      }
+    }
+
     switch (route) {
       case 'to_station':
         return isVacation ? VACATION_TO_STATION_SCHEDULE : TO_STATION_SCHEDULE;

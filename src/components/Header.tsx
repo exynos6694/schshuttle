@@ -30,12 +30,12 @@ export const Header: React.FC<HeaderProps> = ({ isVacation, onToggleVacation, on
             <button
               onClick={onToggleVacation}
               className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
-                isVacation 
+                !isVacation 
                   ? 'bg-blue-400 border-transparent text-white font-bold' 
                   : 'border-blue-200 text-blue-200 hover:bg-white/10'
               }`}
             >
-              {isVacation ? '방학중' : '학기중'}
+              {!isVacation ? '학기중' : '방학중'}
             </button>
           </div>
         </div>

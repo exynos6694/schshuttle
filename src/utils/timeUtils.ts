@@ -1,17 +1,18 @@
 import type { ShuttleTime } from '../data/schedule';
-import { differenceInMinutes, set, isAfter, format, isWeekend } from 'date-fns';
+import { differenceInMinutes, set, isAfter, format, isSaturday } from 'date-fns';
 import Holidays from 'date-holidays';
 
 const hd = new Holidays('KR');
 
 export const isServiceDay = (date: Date): boolean => {
-  if (isWeekend(date)) return false;
-  
+  // 토요일은 운행하지 않음
+  if (isSaturday(date)) return false;
+
   // date-holidays checks if given date is a holiday
   const holidayInstance = hd.isHoliday(date);
   
   // if holidayInstance is truthy, it's a holiday
-  return !holidayInstance;
+  return !holidayInstance; // 토요일 외 일요일은 운행
 };
 
 export const getNextBus = (schedule: ShuttleTime[], currentTime: Date): ShuttleTime | null => {

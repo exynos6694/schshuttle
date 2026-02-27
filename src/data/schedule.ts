@@ -105,6 +105,40 @@ export const VACATION_TO_SCHOOL_SCHEDULE: ShuttleTime[] = [
   { hour: 11, minute: 57, type: 'to_school', trainTime: '11:52' },
 ];
 
+export const WEEKEND_TO_SCHOOL_SCHEDULE: ShuttleTime[] = [
+  { hour: 15, minute: 11, type: 'to_school' },
+  { hour: 15, minute: 37, type: 'to_school' },
+  { hour: 16, minute: 11, type: 'to_school' },
+  { hour: 16, minute: 32, type: 'to_school' },
+  { hour: 17, minute: 23, type: 'to_school', isExpress: true },
+  { hour: 17, minute: 53, type: 'to_school' },
+  { hour: 18, minute: 11, type: 'to_school' },
+  { hour: 18, minute: 38, type: 'to_school' },
+  { hour: 19, minute: 13, type: 'to_school' },
+  { hour: 19, minute: 23, type: 'to_school', isExpress: true },
+  { hour: 20, minute: 12, type: 'to_school' },
+  { hour: 20, minute: 41, type: 'to_school', isExpress: true },
+  { hour: 21, minute: 15, type: 'to_school', isExpress: true },
+  { hour: 21, minute: 37, type: 'to_school' },
+  { hour: 21, minute: 59, type: 'to_school' },
+];
+
+export const WEEKEND_TO_STATION_SCHEDULE: ShuttleTime[] = [
+  { hour: 15, minute: 19, type: 'to_station' },
+  { hour: 15, minute: 59, type: 'to_station' },
+  { hour: 16, minute: 25, type: 'to_station' },
+  { hour: 16, minute: 51, type: 'to_station' },
+  { hour: 17, minute: 23, type: 'to_station' },
+  { hour: 17, minute: 57, type: 'to_station' },
+  { hour: 18, minute: 22, type: 'to_station' },
+  { hour: 18, minute: 50, type: 'to_station' },
+  { hour: 19, minute: 15, type: 'to_station' },
+  { hour: 19, minute: 27, type: 'to_station' },
+  { hour: 20, minute: 25, type: 'to_station' },
+  { hour: 21, minute: 7, type: 'to_station' },
+  { hour: 21, minute: 28, type: 'to_station' },
+  { hour: 21, minute: 45, type: 'to_station' },
+];
 
 // Campus Loop: 08:20 - 18:00, every 10 mins (Keep existing logic as fallback or separate tab)
 export const getLoopSchedule = (): ShuttleTime[] => {
