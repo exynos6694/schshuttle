@@ -10,6 +10,7 @@ import { RouteMapModal } from './components/RouteMapModal';
 import { isWeekend } from 'date-fns';
 
 import { Footer } from './components/Footer';
+import { InstallPrompt } from './components/InstallPrompt';
 
 function App() {
   const [route, setRoute] = useState<Route>('to_station');
@@ -70,6 +71,7 @@ function App() {
       </div>
       <Footer />
       <RouteMapModal isOpen={isMapOpen} onClose={() => setIsMapOpen(false)} />
+      <InstallPrompt />
     </Layout>
   );
 }

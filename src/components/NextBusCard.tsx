@@ -79,7 +79,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
 
         <div className="flex items-baseline mt-2">
           {isDeparting ? (
-             <span className="text-4xl font-bold text-red-500">출발함</span>
+             <span className="text-4xl font-bold text-red-500">출발</span>
           ) : (
             <>
               <span className="text-6xl font-bold text-slate-900 tracking-tighter">
