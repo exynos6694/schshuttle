@@ -5,22 +5,29 @@ import type { ShuttleTime } from '../data/schedule';
 import { getTimeRemaining, formatBusTime, isServiceDay } from '../utils/timeUtils';
 
 interface NextBusCardProps {
-  nextBus: ShuttleTime | null;
+  nextBuses: ShuttleTime[]; // [가장 가까운 버스, 다다음 버스]
 }
 
-export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
+export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [followingTimeLeft, setFollowingTimeLeft] = useState<number | null>(null);
+
+  const nextBus = nextBuses.length > 0 ? nextBuses[0] : null;
+  const followingBus = nextBuses.length > 1 ? nextBuses[1] : null;
 
   useEffect(() => {
     if (!nextBus) return;
     const update = () => {
-      const diff = getTimeRemaining(nextBus, new Date());
-      setTimeLeft(diff);
+      const now = new Date();
+      setTimeLeft(getTimeRemaining(nextBus, now));
+      if (followingBus) {
+        setFollowingTimeLeft(getTimeRemaining(followingBus, now));
+      }
     };
     update();
     const timer = setInterval(update, 1000 * 30); // Update every 30s
     return () => clearInterval(timer);
-  }, [nextBus]);
+  }, [nextBus, followingBus]);
 
   if (!isServiceDay(new Date())) {
     return (
@@ -50,6 +57,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl shadow-xl p-6 border border-slate-100"
       >
+        {/* 가장 가까운 다음 버스 */}
         <div className="flex justify-between items-start mb-2">
           <span className="text-slate-500 font-medium text-sm uppercase tracking-wider">Next Bus</span>
           <div className="flex gap-1.5 items-center">
@@ -82,7 +90,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
           )}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 mb-4">
           <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
             <motion.div
               className={`h-full rounded-full ${isImminent ? 'bg-red-500' : 'bg-primary'}`}
@@ -95,6 +103,22 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBus }) => {
             {nextBus.type === 'to_school' ? '지하철 시간표 기반' : '학교 시간표 기반'}
           </p>
         </div>
+
+        {/* 다다음 버스 안내 (디자인 강화) */}
+        {followingBus && followingTimeLeft !== null && !isDeparting && (
+          <div className="mt-5 p-3.5 bg-slate-50 rounded-xl flex justify-between items-center border border-slate-100 shadow-sm">
+            <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+              <span className="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded-full font-bold">다음 차</span>
+              <span className="font-bold text-slate-800 text-base">{formatBusTime(followingBus)}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs">
+              {followingBus.isExpress && <span className="text-red-500 font-bold">[급행]</span>}
+              <span className="text-primary font-bold bg-blue-100/50 px-2.5 py-1 rounded-md">
+                {followingTimeLeft}분 뒤
+              </span>
+            </div>
+          </div>
+        )}
       </motion.div>
     </div>
   );

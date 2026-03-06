@@ -10,11 +10,10 @@ interface RouteSelectorProps {
 }
 
 export const RouteSelector: React.FC<RouteSelectorProps> = ({ currentRoute, onSelect }) => {
-  const tabs: { id: Route; label: string }[] = [
-    { id: 'to_station', label: 'To Station' },
-    { id: 'to_school', label: 'To School' },
-    { id: 'loop', label: '학내순환' },
-  ];
+    const tabs: { id: Route; label: string }[] = [
+      { id: 'to_station', label: 'To Station' },
+      { id: 'to_school', label: 'To School' },
+    ];
 
   return (
     <div className="px-4 mb-6">

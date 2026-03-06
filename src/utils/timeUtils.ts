@@ -15,9 +15,9 @@ export const isServiceDay = (date: Date): boolean => {
   return !holidayInstance; // 토요일 외 일요일은 운행
 };
 
-export const getNextBus = (schedule: ShuttleTime[], currentTime: Date): ShuttleTime | null => {
+export const getNextBuses = (schedule: ShuttleTime[], currentTime: Date, count: number = 2): ShuttleTime[] => {
   if (!isServiceDay(currentTime)) {
-    return null;
+    return [];
   }
 
   // Sort schedule just in case
@@ -26,15 +26,19 @@ export const getNextBus = (schedule: ShuttleTime[], currentTime: Date): ShuttleT
     return a.minute - b.minute;
   });
 
+  const nextBuses: ShuttleTime[] = [];
+
   for (const bus of sorted) {
     const busTime = set(currentTime, { hours: bus.hour, minutes: bus.minute, seconds: 0, milliseconds: 0 });
     if (isAfter(busTime, currentTime)) {
-      return bus;
+      nextBuses.push(bus);
+      if (nextBuses.length >= count) {
+        break;
+      }
     }
   }
   
-  // If no bus left today, return the first one tomorrow (optional, for now return null)
-  return null;
+  return nextBuses;
 };
 
 export const getTimeRemaining = (bus: ShuttleTime, currentTime: Date): number => {

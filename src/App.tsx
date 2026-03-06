@@ -5,7 +5,7 @@ import { RouteSelector, type Route } from './components/RouteSelector';
 import { NextBusCard } from './components/NextBusCard';
 import { TimeTable } from './components/TimeTable';
 import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, WEEKEND_TO_SCHOOL_SCHEDULE, WEEKEND_TO_STATION_SCHEDULE, getLoopSchedule } from './data/schedule';
-import { getNextBus, isServiceDay } from './utils/timeUtils';
+import { getNextBuses, isServiceDay } from './utils/timeUtils';
 import { RouteMapModal } from './components/RouteMapModal';
 import { isWeekend } from 'date-fns';
 
@@ -53,7 +53,8 @@ function App() {
     }
   }, [route, isVacation, currentTime]);
 
-  const nextBus = useMemo(() => getNextBus(schedule, currentTime), [schedule, currentTime]);
+  const nextBuses = useMemo(() => getNextBuses(schedule, currentTime, 2), [schedule, currentTime]);
+  const nextBus = nextBuses.length > 0 ? nextBuses[0] : null;
 
   return (
     <Layout>
@@ -64,7 +65,7 @@ function App() {
       />
       <RouteSelector currentRoute={route} onSelect={setRoute} />
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <NextBusCard nextBus={nextBus} />
+        <NextBusCard nextBuses={nextBuses} />
         <TimeTable schedule={schedule} nextBus={nextBus} />
       </div>
       <Footer />
