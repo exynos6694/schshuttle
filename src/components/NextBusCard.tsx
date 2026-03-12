@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, Clock } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import type { ShuttleTime } from '../data/schedule';
 import { getTimeRemaining, formatBusTime, isServiceDay } from '../utils/timeUtils';
 
@@ -85,7 +85,6 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
         {/* 상단 라인: 타이틀 + 시간/목적지 정보 */}
         <motion.div layout className={`flex justify-between items-center ${isSticky ? '' : 'mb-2'}`}>
           <motion.div layout className="flex items-center gap-1.5">
-            <Clock className={`w-4 h-4 ${isImminent && !isDeparting ? 'text-red-500 animate-pulse' : 'text-slate-400'}`} />
             <span className="text-slate-500 font-bold text-sm uppercase tracking-wider">Next Bus</span>
           </motion.div>
           <motion.div layout className="flex gap-1.5 items-center">
