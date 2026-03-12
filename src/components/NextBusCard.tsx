@@ -86,7 +86,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
         <motion.div layout className={`flex justify-between items-center ${isSticky ? '' : 'mb-2'}`}>
           <motion.div layout className="flex items-center gap-1.5">
             <Clock className={`w-4 h-4 ${isImminent && !isDeparting ? 'text-red-500 animate-pulse' : 'text-slate-400'}`} />
-            <span className="text-slate-500 font-bold text-sm uppercase tracking-wider hidden sm:inline-block">Next Bus</span>
+            <span className="text-slate-500 font-bold text-sm uppercase tracking-wider">Next Bus</span>
           </motion.div>
           <motion.div layout className="flex gap-1.5 items-center">
             {nextBus.isExpress && (
