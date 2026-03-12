@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { AlertCircle } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { AlertCircle, Clock } from 'lucide-react';
 import type { ShuttleTime } from '../data/schedule';
 import { getTimeRemaining, formatBusTime, isServiceDay } from '../utils/timeUtils';
 
@@ -11,9 +11,25 @@ interface NextBusCardProps {
 export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [followingTimeLeft, setFollowingTimeLeft] = useState<number | null>(null);
+  const [isSticky, setIsSticky] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const nextBus = nextBuses.length > 0 ? nextBuses[0] : null;
   const followingBus = nextBuses.length > 1 ? nextBuses[1] : null;
+
+  // Intersection Observer for sticky state
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([e]) => setIsSticky(e.intersectionRatio < 1),
+      { threshold: [1], rootMargin: '-17px 0px 0px 0px' }
+    );
+    
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+    
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!nextBus) return;
@@ -50,17 +66,29 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
   const isImminent = timeLeft !== null && timeLeft <= 5;
   const isDeparting = timeLeft !== null && timeLeft <= 0;
 
+  // 최대 대기시간(30분) 기준으로 차오르는 퍼센테이지 계산 (30분 이상 남았을 때는 게이지가 0에서 대기)
+  const maxWaitTime = 30;
+  const progressPercent = timeLeft !== null 
+    ? Math.max(0, Math.min(100, ((maxWaitTime - timeLeft) / maxWaitTime) * 100))
+    : 0;
+
   return (
-    <div className="mx-4 mt-2 relative z-20">
+    <div ref={cardRef} className="mx-4 mt-2 mb-4 relative z-30 sticky top-4 transition-all duration-300">
       <motion.div
+        layout
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-xl p-6 border border-slate-100"
+        className={`bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100/50 overflow-hidden transition-all duration-500 ease-in-out ${
+          isSticky ? 'p-4' : 'p-6'
+        }`}
       >
-        {/* 가장 가까운 다음 버스 */}
-        <div className="flex justify-between items-start mb-2">
-          <span className="text-slate-500 font-medium text-sm uppercase tracking-wider">Next Bus</span>
-          <div className="flex gap-1.5 items-center">
+        {/* 상단 라인: 타이틀 + 시간/목적지 정보 */}
+        <motion.div layout className={`flex justify-between items-center ${isSticky ? '' : 'mb-2'}`}>
+          <motion.div layout className="flex items-center gap-1.5">
+            <Clock className={`w-4 h-4 ${isImminent && !isDeparting ? 'text-red-500 animate-pulse' : 'text-slate-400'}`} />
+            <span className="text-slate-500 font-bold text-sm uppercase tracking-wider hidden sm:inline-block">Next Bus</span>
+          </motion.div>
+          <motion.div layout className="flex gap-1.5 items-center">
             {nextBus.isExpress && (
               <div className="bg-red-50 text-red-600 px-2.5 py-1 rounded-full text-[10px] font-bold">
                 급행
@@ -74,51 +102,83 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
             <div className="bg-blue-50 text-primary px-3 py-1 rounded-full text-xs font-bold">
               {formatBusTime(nextBus)}
             </div>
-          </div>
-        </div>
+            
+            {/* Sticky 모드일 때만 헤더 옆에 간단히 시간 표시 */}
+            {isSticky && (
+              <div className="ml-2 border-l border-slate-200 pl-3">
+                {isDeparting ? (
+                  <span className="text-sm font-bold text-red-500 animate-pulse">출발 완료</span>
+                ) : (
+                  <div className="flex items-baseline gap-1">
+                    {isImminent && <span className="bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded font-bold animate-pulse">임박</span>}
+                    <span className={`text-xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>{timeLeft}</span>
+                    <span className="text-xs font-bold text-slate-500">분 뒤</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
 
-        <div className="flex items-baseline mt-2">
-          {isDeparting ? (
-             <span className="text-4xl font-bold text-red-500">출발</span>
-          ) : (
-            <>
-              <span className="text-6xl font-bold text-slate-900 tracking-tighter">
-                {timeLeft}
-              </span>
-              <span className="text-xl text-slate-500 ml-2 font-medium">분 뒤</span>
-            </>
-          )}
-        </div>
-
-        <div className="mt-6 mb-4">
-          <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+        {/* 메인 시간 표시 (비 Sticky 모드일 때만 보임) */}
+        <AnimatePresence>
+          {!isSticky && (
             <motion.div
-              className={`h-full rounded-full ${isImminent ? 'bg-red-500' : 'bg-primary'}`}
-              initial={{ width: "100%" }}
-              animate={{ width: isDeparting ? "100%" : "60%" }} // Mock progress for MVP
-              transition={{ duration: 1 }}
-            />
-          </div>
-          <p className="text-xs text-slate-400 mt-2 text-right">
-            {nextBus.type === 'to_school' ? '지하철 시간표 기반' : '학교 시간표 기반'}
-          </p>
-        </div>
+              layout
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+              className="flex flex-col"
+            >
+              <div className="flex items-baseline mt-2 relative">
+                {isDeparting ? (
+                   <span className="text-4xl font-bold text-red-500 animate-pulse">출발 완료</span>
+                ) : (
+                  <div className="relative">
+                    {isImminent && (
+                      <span className="absolute -inset-4 rounded-full bg-red-100/50 animate-ping -z-10" />
+                    )}
+                    <span className={`text-6xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
+                      {timeLeft}
+                    </span>
+                    <span className={`text-xl ml-2 font-bold ${isImminent ? 'text-red-400' : 'text-slate-500'}`}>분 뒤</span>
+                    {isImminent && <span className="absolute top-0 -right-12 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse">임박</span>}
+                  </div>
+                )}
+              </div>
 
-        {/* 다다음 버스 안내 (디자인 강화) */}
-        {followingBus && followingTimeLeft !== null && !isDeparting && (
-          <div className="mt-5 p-3.5 bg-slate-50 rounded-xl flex justify-between items-center border border-slate-100 shadow-sm">
-            <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-              <span className="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded-full font-bold">다음 차</span>
-              <span className="font-bold text-slate-800 text-base">{formatBusTime(followingBus)}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs">
-              {followingBus.isExpress && <span className="text-red-500 font-bold">[급행]</span>}
-              <span className="text-primary font-bold bg-blue-100/50 px-2.5 py-1 rounded-md">
-                {followingTimeLeft}분 뒤
-              </span>
-            </div>
-          </div>
-        )}
+              <div className="mt-6 mb-4">
+                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <motion.div
+                    className={`h-full rounded-full ${isImminent ? 'bg-red-500' : 'bg-primary'}`}
+                    initial={{ width: "100%" }}
+                    animate={{ width: isDeparting ? "100%" : `${progressPercent}%` }}
+                    transition={{ duration: 1 }}
+                  />
+                </div>
+                <p className="text-xs text-slate-400 mt-2 text-right">
+                  {nextBus.type === 'to_school' ? '지하철 시간표 기반' : '학교 시간표 기반'}
+                </p>
+              </div>
+
+              {/* 다다음 버스 안내 */}
+              {followingBus && followingTimeLeft !== null && (
+                <div className="mt-2 p-3.5 bg-slate-50 rounded-xl flex justify-between items-center border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                    <span className="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded-full font-bold">다음 차</span>
+                    <span className="font-bold text-slate-800 text-base">{formatBusTime(followingBus)}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs">
+                    {followingBus.isExpress && <span className="text-red-500 font-bold">[급행]</span>}
+                    <span className="text-primary font-bold bg-blue-100/50 px-2.5 py-1 rounded-md">
+                      {followingTimeLeft}분 뒤
+                    </span>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
