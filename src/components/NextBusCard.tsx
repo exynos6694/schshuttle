@@ -107,11 +107,21 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
             {isSticky && (
               <div className="ml-2 border-l border-slate-200 pl-3">
                 {isDeparting ? (
-                  <span className="text-sm font-bold text-red-500 animate-pulse">출발 완료</span>
+                  <span className="text-sm font-bold text-red-500 animate-pulse">출발</span>
                 ) : (
                   <div className="flex items-baseline gap-1">
                     {isImminent && <span className="bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded font-bold animate-pulse">임박</span>}
-                    <span className={`text-xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>{timeLeft}</span>
+                    {timeLeft !== null && timeLeft >= 60 && (
+                      <>
+                        <span className={`text-xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
+                          {Math.floor(timeLeft / 60)}
+                        </span>
+                        <span className="text-xs font-bold text-slate-500 mr-1">시간</span>
+                      </>
+                    )}
+                    <span className={`text-xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
+                      {timeLeft !== null ? timeLeft % 60 : 0}
+                    </span>
                     <span className="text-xs font-bold text-slate-500">분 뒤</span>
                   </div>
                 )}
@@ -132,14 +142,22 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
             >
               <div className="flex items-baseline mt-2 relative">
                 {isDeparting ? (
-                   <span className="text-4xl font-bold text-red-500 animate-pulse">출발 완료</span>
+                   <span className="text-4xl font-bold text-red-500 animate-pulse">출발</span>
                 ) : (
-                  <div className="relative">
+                  <div className="relative flex items-baseline">
                     {isImminent && (
                       <span className="absolute -inset-4 rounded-full bg-red-100/50 animate-ping -z-10" />
                     )}
-                    <span className={`text-6xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
-                      {timeLeft}
+                    {timeLeft !== null && timeLeft >= 60 && (
+                      <>
+                        <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
+                          {Math.floor(timeLeft / 60)}
+                        </span>
+                        <span className={`text-xl sm:text-2xl ml-1 mr-3 font-bold ${isImminent ? 'text-red-400' : 'text-slate-500'}`}>시간</span>
+                      </>
+                    )}
+                    <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
+                      {timeLeft !== null ? timeLeft % 60 : 0}
                     </span>
                     <span className={`text-xl ml-2 font-bold ${isImminent ? 'text-red-400' : 'text-slate-500'}`}>분 뒤</span>
                     {isImminent && <span className="absolute top-0 -right-12 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse">임박</span>}
@@ -171,7 +189,9 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
                   <div className="flex items-center gap-1.5 text-xs">
                     {followingBus.isExpress && <span className="text-red-500 font-bold">[급행]</span>}
                     <span className="text-primary font-bold bg-blue-100/50 px-2.5 py-1 rounded-md">
-                      {followingTimeLeft}분 뒤
+                      {followingTimeLeft !== null && followingTimeLeft >= 60 
+                        ? `${Math.floor(followingTimeLeft / 60)}시간 ${followingTimeLeft % 60}분 뒤` 
+                        : `${followingTimeLeft}분 뒤`}
                     </span>
                   </div>
                 </div>
