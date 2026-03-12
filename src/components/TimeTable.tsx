@@ -9,15 +9,18 @@ interface TimeTableProps {
 }
 
 export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
-  // Filter to show only future buses or recent ones
-  // For MVP, show all but highlight next
-  
   // Find index of next bus
   const nextBusIndex = nextBus 
     ? schedule.findIndex(b => b.hour === nextBus.hour && b.minute === nextBus.minute)
     : -1;
 
-  // Scroll to next bus logic could be added here
+  const upcomingBuses = nextBusIndex !== -1 ? schedule.slice(nextBusIndex) : [];
+  const pastBuses = nextBusIndex !== -1 ? schedule.slice(0, nextBusIndex) : schedule;
+
+  const displaySchedule = [
+    ...upcomingBuses.map((bus, i) => ({ bus, isNext: i === 0, isPast: false })),
+    ...pastBuses.map((bus) => ({ bus, isNext: false, isPast: true }))
+  ];
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3 pb-20">
@@ -25,16 +28,25 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
         예정 시간표
       </h3>
       
-      {schedule.map((bus, idx) => {
-        const isNext = idx === nextBusIndex;
-        const isPast = nextBusIndex !== -1 && idx < nextBusIndex;
+      {displaySchedule.map(({ bus, isNext, isPast }, idx) => {
+        // 지난 시간표가 시작되는 첫 번째 인덱스 찾기
+        const isFirstPast = isPast && (idx === 0 || !displaySchedule[idx - 1].isPast);
 
         return (
-          <motion.div
-            key={`${bus.hour}-${bus.minute}`}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: idx * 0.05 }}
+          <React.Fragment key={`${bus.hour}-${bus.minute}`}>
+            {isFirstPast && (
+              <div className="flex items-center gap-3 py-6 mt-4">
+                <div className="h-px bg-slate-200 flex-1"></div>
+                <span className="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
+                  운행 종료 (지난 버스)
+                </span>
+                <div className="h-px bg-slate-200 flex-1"></div>
+              </div>
+            )}
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: Math.min(idx, 15) * 0.05 }}
             className={`flex items-center justify-between p-4 rounded-xl border transition-colors ${
               isNext 
                 ? 'bg-blue-50 border-blue-200 shadow-sm' 
@@ -64,8 +76,9 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
               </span>
             )}
           </motion.div>
-        );
-      })}
+        </React.Fragment>
+      );
+    })}
     </div>
   );
 };
