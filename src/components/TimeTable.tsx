@@ -65,14 +65,14 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: Math.min(idx, 15) * 0.05 }}
               onClick={() => toggleExpand(originalIndex)}
-              className={`flex flex-col p-4 rounded-xl border transition-colors cursor-pointer overflow-hidden ${
+              className={`flex flex-col p-4 rounded-xl border transition-all cursor-pointer overflow-hidden ${
                 isExpanded 
-                  ? 'bg-blue-50/50 border-blue-300 shadow-md ring-1 ring-blue-100'
+                  ? 'bg-blue-50/50 border-blue-300 shadow-md ring-1 ring-blue-100 border-l-4 border-l-blue-500'
                   : isNext 
-                    ? 'bg-blue-50 border-blue-200 shadow-sm' 
+                    ? 'bg-blue-50 border-blue-200 shadow-sm border-l-4 border-l-blue-500' 
                     : isPast 
-                      ? 'bg-slate-50 border-transparent opacity-50 hover:opacity-75'
-                      : 'bg-white border-slate-100 hover:border-blue-100 hover:bg-slate-50'
+                      ? 'bg-slate-50/60 border-transparent opacity-50 hover:opacity-75 border-l-4 border-l-slate-200'
+                      : 'bg-white border-slate-100 hover:border-blue-100 hover:bg-slate-50/50 border-l-4 border-l-transparent hover:border-l-blue-200'
               }`}
             >
               <div className="flex items-center justify-between">

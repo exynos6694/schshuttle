@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
+import { TrainFront, School } from 'lucide-react';
 
 export type Route = 'to_station' | 'to_school' | 'loop';
 
@@ -10,9 +11,9 @@ interface RouteSelectorProps {
 }
 
 export const RouteSelector: React.FC<RouteSelectorProps> = ({ currentRoute, onSelect }) => {
-    const tabs: { id: Route; label: string }[] = [
-      { id: 'to_station', label: 'To Station' },
-      { id: 'to_school', label: 'To School' },
+    const tabs: { id: Route; label: string; icon: React.ReactNode }[] = [
+      { id: 'to_station', label: '역으로', icon: <TrainFront className="w-3.5 h-3.5" /> },
+      { id: 'to_school', label: '학교로', icon: <School className="w-3.5 h-3.5" /> },
     ];
 
   return (
@@ -34,7 +35,10 @@ export const RouteSelector: React.FC<RouteSelectorProps> = ({ currentRoute, onSe
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <span className="relative z-10">{tab.label}</span>
+            <span className="relative z-10 flex items-center justify-center gap-1.5">
+              {tab.icon}
+              {tab.label}
+            </span>
           </button>
         ))}
       </div>

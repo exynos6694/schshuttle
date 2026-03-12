@@ -53,6 +53,7 @@ export const RouteMapModal: React.FC<RouteMapModalProps> = ({ isOpen, onClose })
                   }}
                 />
               </div>
+              <p className="text-xs text-slate-400 text-center mt-3">출처: 순천향대학교 국제교육교류처</p>
             </div>
           </motion.div>
         </>

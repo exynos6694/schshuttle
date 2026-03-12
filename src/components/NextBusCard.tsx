@@ -67,7 +67,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
   const isDeparting = timeLeft !== null && timeLeft <= 0;
 
   // 최대 대기시간(30분) 기준으로 차오르는 퍼센테이지 계산 (30분 이상 남았을 때는 게이지가 0에서 대기)
-  const maxWaitTime = 30;
+  const maxWaitTime = 40;
   const progressPercent = timeLeft !== null 
     ? Math.max(0, Math.min(100, ((maxWaitTime - timeLeft) / maxWaitTime) * 100))
     : 0;
@@ -141,7 +141,13 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
             >
               <div className="flex items-baseline mt-2 relative">
                 {isDeparting ? (
-                   <span className="text-4xl font-bold text-red-500 animate-pulse">출발</span>
+                  <div className="flex items-center gap-3">
+                    <span className="relative flex h-4 w-4">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
+                    </span>
+                    <span className="text-4xl font-black text-red-500 tracking-tight">출발</span>
+                  </div>
                 ) : (
                   <div className="relative flex items-baseline">
                     {isImminent && (
@@ -149,16 +155,20 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
                     )}
                     {timeLeft !== null && timeLeft >= 60 && (
                       <>
-                        <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
+                        <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${
+                          isImminent ? 'text-red-500' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
+                        }`}>
                           {Math.floor(timeLeft / 60)}
                         </span>
-                        <span className={`text-xl sm:text-2xl ml-1 mr-3 font-bold ${isImminent ? 'text-red-400' : 'text-slate-500'}`}>시간</span>
+                        <span className={`text-xl sm:text-2xl ml-1 mr-3 font-bold ${isImminent ? 'text-red-400' : 'text-slate-400'}`}>시간</span>
                       </>
                     )}
-                    <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
+                    <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${
+                      isImminent ? 'text-red-500' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
+                    }`}>
                       {timeLeft !== null ? timeLeft % 60 : 0}
                     </span>
-                    <span className={`text-xl ml-2 font-bold ${isImminent ? 'text-red-400' : 'text-slate-500'}`}>분 뒤</span>
+                    <span className={`text-xl ml-2 font-bold ${isImminent ? 'text-red-400' : 'text-slate-400'}`}>분 뒤</span>
                     {isImminent && <span className="absolute top-0 -right-12 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse">임박</span>}
                   </div>
                 )}
@@ -167,11 +177,13 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
               <div className="mt-6 mb-4">
                 <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                   <motion.div
-                    className={`h-full rounded-full ${isImminent ? 'bg-red-500' : 'bg-primary'}`}
+                    className={`h-full rounded-full relative overflow-hidden ${isImminent ? 'bg-red-500' : 'bg-gradient-to-r from-blue-500 to-blue-400'}`}
                     initial={{ width: "100%" }}
                     animate={{ width: isDeparting ? "100%" : `${progressPercent}%` }}
                     transition={{ duration: 1 }}
-                  />
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+                  </motion.div>
                 </div>
                 <p className="text-xs text-slate-400 mt-2 text-right">
                   {nextBus.type === 'to_school' ? '지하철 시간표 기반' : '학교 시간표 기반'}
