@@ -5,7 +5,7 @@ import { RouteSelector, type Route } from './components/RouteSelector';
 import { NextBusCard } from './components/NextBusCard';
 import { TimeTable } from './components/TimeTable';
 import { TO_STATION_SCHEDULE, TO_SCHOOL_SCHEDULE, VACATION_TO_STATION_SCHEDULE, VACATION_TO_SCHOOL_SCHEDULE, WEEKEND_TO_SCHOOL_SCHEDULE, WEEKEND_TO_STATION_SCHEDULE, getLoopSchedule } from './data/schedule';
-import { getNextBuses, isServiceDay } from './utils/timeUtils';
+import { getNextBuses, isServiceDay, isLastDayOfHolidayWithSunday } from './utils/timeUtils';
 import { RouteMapModal } from './components/RouteMapModal';
 import { isWeekend } from 'date-fns';
 
@@ -28,8 +28,8 @@ function App() {
       return [];
     }
     
-    // 주말일 경우 주말 시간표 반환 (루프버스는 주말 미운행으로 간주)
-    if (isWeekend(currentTime)) {
+    // 주말이거나 연휴 마지막 날(일요일 포함)일 경우 주말 시간표 반환
+    if (isWeekend(currentTime) || isLastDayOfHolidayWithSunday(currentTime)) {
       switch (route) {
         case 'to_station':
           return WEEKEND_TO_STATION_SCHEDULE;
