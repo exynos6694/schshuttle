@@ -45,7 +45,21 @@ export const isLastDayOfHolidayWithSunday = (date: Date): boolean => {
   return hasSunday;
 };
 
+// 학교 자체 휴일 (월-일 관계없이 셔틀 미운행)
+const SCHOOL_HOLIDAYS = [
+  { month: 4, day: 3 }, // 개교기념일
+];
+
+const isSchoolHoliday = (date: Date): boolean => {
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return SCHOOL_HOLIDAYS.some(h => h.month === month && h.day === day);
+};
+
 export const isServiceDay = (date: Date): boolean => {
+  // 학교 자체 휴일 (개교기념일 등)
+  if (isSchoolHoliday(date)) return false;
+
   // 토요일은 운행하지 않음
   if (isSaturday(date)) return false;
 
