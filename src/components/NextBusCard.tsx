@@ -85,7 +85,9 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
         {/* 상단 라인: 타이틀 + 시간/목적지 정보 */}
         <motion.div layout className={`flex justify-between items-center ${isSticky ? '' : 'mb-2'}`}>
           <motion.div layout className="flex items-center gap-1.5">
-            <span className="text-slate-500 font-bold text-sm uppercase tracking-wider">Next Bus</span>
+            <span className={`font-bold text-sm uppercase tracking-wider ${nextBus.hasNoShuttle ? 'text-slate-400' : 'text-slate-500'}`}>
+              {nextBus.hasNoShuttle ? 'Next Subway' : 'Next Bus'}
+            </span>
           </motion.div>
           <motion.div layout className="flex gap-1.5 items-center">
             {nextBus.isExpress && (
@@ -98,7 +100,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
                 {nextBus.destination}
               </div>
             )}
-            <div className="bg-blue-50 text-primary px-3 py-1 rounded-full text-xs font-bold">
+            <div className={`${nextBus.hasNoShuttle ? 'bg-slate-100 text-slate-500' : 'bg-blue-50 text-primary'} px-3 py-1 rounded-full text-xs font-bold`}>
               {formatBusTime(nextBus)}
             </div>
             
@@ -156,7 +158,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
                     {timeLeft !== null && timeLeft >= 60 && (
                       <>
                         <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${
-                          isImminent ? 'text-red-500' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
+                          isImminent ? 'text-red-500' : nextBus.hasNoShuttle ? 'bg-gradient-to-r from-slate-500 to-slate-400 bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
                         }`}>
                           {Math.floor(timeLeft / 60)}
                         </span>
@@ -164,7 +166,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
                       </>
                     )}
                     <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${
-                      isImminent ? 'text-red-500' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
+                      isImminent ? 'text-red-500' : nextBus.hasNoShuttle ? 'bg-gradient-to-r from-slate-500 to-slate-400 bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
                     }`}>
                       {timeLeft !== null ? timeLeft % 60 : 0}
                     </span>
@@ -177,7 +179,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
               <div className="mt-6 mb-4">
                 <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                   <motion.div
-                    className={`h-full rounded-full relative overflow-hidden ${isImminent ? 'bg-red-500' : 'bg-gradient-to-r from-blue-500 to-blue-400'}`}
+                    className={`h-full rounded-full relative overflow-hidden ${isImminent ? 'bg-red-500' : nextBus.hasNoShuttle ? 'bg-gradient-to-r from-slate-400 to-slate-300' : 'bg-gradient-to-r from-blue-500 to-blue-400'}`}
                     initial={{ width: "100%" }}
                     animate={{ width: isDeparting ? "100%" : `${progressPercent}%` }}
                     transition={{ duration: 1 }}
@@ -186,7 +188,9 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
                   </motion.div>
                 </div>
                 <p className="text-xs text-slate-400 mt-2 text-right">
-                  {nextBus.type === 'to_school' ? '지하철 시간표 기반' : '학교 시간표 기반'}
+                  {nextBus.hasNoShuttle 
+                    ? '셔틀 미운행 / 전철 전용 표시' 
+                    : nextBus.type === 'to_school' ? '지하철 시간표 기반' : '학교 시간표 기반'}
                 </p>
               </div>
 
@@ -195,7 +199,9 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
                 <div className="mt-2 p-3.5 bg-slate-50 rounded-xl flex justify-between items-center border border-slate-100 shadow-sm">
                   <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
                     <span className="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded-full font-bold">다음 차</span>
-                    <span className="font-bold text-slate-800 text-base">{formatBusTime(followingBus)}</span>
+                    <span className="font-bold text-slate-800 text-base">
+                      {followingBus.hasNoShuttle ? '셔틀없음 ' : ''}{formatBusTime(followingBus)}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs">
                     {followingBus.isExpress && <span className="text-red-500 font-bold">[급행]</span>}

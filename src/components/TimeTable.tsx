@@ -79,13 +79,13 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
                 <div className="flex items-center gap-3">
                   <div className={`w-2 h-2 rounded-full transition-colors ${isExpanded ? 'bg-blue-500' : isNext ? 'bg-primary' : 'bg-slate-300'}`} />
                   <div className="flex flex-col">
-                    <span className={`font-bold text-lg transition-colors ${isExpanded || isNext ? 'text-primary' : 'text-slate-700'}`}>
-                      {formatBusTime(bus)}
+                    <span className={`font-bold transition-colors ${bus.hasNoShuttle ? 'text-slate-400 text-sm' : (isExpanded || isNext ? 'text-primary text-lg' : 'text-slate-700 text-lg')}`}>
+                      {bus.hasNoShuttle ? '셔틀 미운행' : formatBusTime(bus)}
                     </span>
                     {bus.trainTime && (
-                      <span className="text-xs flex items-center gap-1 mt-0.5 transition-colors text-slate-400">
-                        지하철: {bus.trainTime}
-                        {bus.destination && <span>({bus.destination})</span>}
+                      <span className={`flex items-center gap-1 mt-0.5 transition-colors ${bus.hasNoShuttle ? 'text-lg font-bold text-slate-700' : 'text-xs text-slate-400'}`}>
+                        {bus.hasNoShuttle ? '전철탑승:' : '지하철:'} {bus.trainTime}
+                        {bus.destination && <span className={bus.hasNoShuttle ? 'text-sm text-slate-500 font-medium' : ''}>({bus.destination})</span>}
                         {bus.isExpress && <span className="text-red-500 font-bold ml-1">급행</span>}
                       </span>
                     )}
