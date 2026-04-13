@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 import type { ShuttleTime } from '../data/schedule';
-import { getTimeRemaining, formatBusTime, isServiceDay } from '../utils/timeUtils';
+import { getTimeRemaining, formatBusTime } from '../utils/timeUtils';
 
 interface NextBusCardProps {
   nextBuses: ShuttleTime[]; // [가장 가까운 버스, 다다음 버스]
+  isServiceDay: boolean;
 }
 
-export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
+export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDay }) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [followingTimeLeft, setFollowingTimeLeft] = useState<number | null>(null);
   const [isSticky, setIsSticky] = useState(false);
@@ -45,7 +46,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses }) => {
     return () => clearInterval(timer);
   }, [nextBus, followingBus]);
 
-  if (!isServiceDay(new Date())) {
+  if (!isServiceDay) {
     return (
       <div className="mx-4 mt-4 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 flex flex-col items-center justify-center text-slate-400 min-h-[200px]">
         <AlertCircle className="w-12 h-12 mb-2 opacity-50" />

@@ -57,6 +57,8 @@ function App() {
   const nextBuses = useMemo(() => getNextBuses(schedule, currentTime, 2), [schedule, currentTime]);
   const nextBus = nextBuses.length > 0 ? nextBuses[0] : null;
 
+  const isCurrentServiceDay = useMemo(() => isServiceDay(currentTime), [currentTime]);
+
   return (
     <Layout>
       <Header 
@@ -66,7 +68,7 @@ function App() {
       />
       <RouteSelector currentRoute={route} onSelect={setRoute} />
       <div className="flex-1 relative">
-        <NextBusCard nextBuses={nextBuses} />
+        <NextBusCard nextBuses={nextBuses} isServiceDay={isCurrentServiceDay} />
         <TimeTable schedule={schedule} nextBus={nextBus} />
       </div>
       <Footer />
