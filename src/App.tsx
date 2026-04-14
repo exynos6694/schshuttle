@@ -11,12 +11,14 @@ import { isWeekend } from 'date-fns';
 
 import { Footer } from './components/Footer';
 import { InstallPrompt } from './components/InstallPrompt';
+import { TermsModal } from './components/TermsModal';
 
 function App() {
   const [route, setRoute] = useState<Route>('to_station');
   const [isVacation, setIsVacation] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000 * 30);
@@ -71,8 +73,9 @@ function App() {
         <NextBusCard nextBuses={nextBuses} isServiceDay={isCurrentServiceDay} />
         <TimeTable schedule={schedule} nextBus={nextBus} />
       </div>
-      <Footer />
+      <Footer onOpenTerms={() => setIsTermsOpen(true)} />
       <RouteMapModal isOpen={isMapOpen} onClose={() => setIsMapOpen(false)} />
+      <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
       <InstallPrompt />
     </Layout>
   );

@@ -1,7 +1,11 @@
 import React from 'react';
 import { Info } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenTerms?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenTerms }) => {
   return (
     <footer className="px-5 py-4 mt-auto">
       <div className="bg-amber-50/80 rounded-xl p-4 border border-amber-100">
@@ -15,6 +19,16 @@ export const Footer: React.FC = () => {
           </div>
         </div>
       </div>
+      {onOpenTerms && (
+        <div className="mt-3 text-center">
+          <button
+            onClick={onOpenTerms}
+            className="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
+          >
+            이용약관
+          </button>
+        </div>
+      )}
     </footer>
   );
 };
