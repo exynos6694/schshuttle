@@ -20,11 +20,17 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
 
   // Intersection Observer for sticky state
   useEffect(() => {
-    // safe area 높이를 읽어와 rootMargin에 반영
-    const safeAreaTop = parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-top)') || '0',
-      10
-    ) || 0;
+    // 임시 요소를 만들어 env(safe-area-inset-top)의 실제 px 값을 측정
+    const probe = document.createElement('div');
+    probe.style.position = 'fixed';
+    probe.style.top = '0';
+    probe.style.height = 'env(safe-area-inset-top)';
+    probe.style.width = '0';
+    probe.style.visibility = 'hidden';
+    document.body.appendChild(probe);
+    const safeAreaTop = probe.offsetHeight;
+    document.body.removeChild(probe);
+
     const marginTop = -(safeAreaTop + 17);
 
     const observer = new IntersectionObserver(
