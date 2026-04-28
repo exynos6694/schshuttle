@@ -18,7 +18,7 @@ export const Header: React.FC<HeaderProps> = ({ isVacation, onToggleVacation, on
   }, []);
 
   return (
-    <header className="px-6 pt-8 pb-6 text-white">
+    <header className="px-6 pt-8 pb-6 text-white" style={{ paddingTop: 'calc(2rem + env(safe-area-inset-top))' }}>
       <div className="flex justify-between items-start mb-4">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
