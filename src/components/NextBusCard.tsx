@@ -99,7 +99,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
         }`}
       >
         {/* 상단 라인: 타이틀 + 시간/목적지 정보 */}
-        <div className={`flex justify-between items-center transition-all duration-300 ${isSticky ? '' : 'mb-2'}`}>
+        <div className={`flex justify-between items-center transition-all duration-300 whitespace-nowrap ${isSticky ? '' : 'mb-2'}`}>
           <div className="flex items-center gap-1.5">
             <span className={`font-bold text-sm uppercase tracking-wider ${nextBus.hasNoShuttle ? 'text-slate-400' : 'text-slate-500'}`}>
               {nextBus.hasNoShuttle ? 'Next Subway' : 'Next Bus'}

@@ -12,6 +12,7 @@ import { isWeekend } from 'date-fns';
 import { Footer } from './components/Footer';
 import { InstallPrompt } from './components/InstallPrompt';
 import { TermsModal } from './components/TermsModal';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const [route, setRoute] = useState<Route>('to_station');
@@ -77,6 +78,7 @@ function App() {
       <RouteMapModal isOpen={isMapOpen} onClose={() => setIsMapOpen(false)} />
       <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
       <InstallPrompt />
+      <Analytics />
     </Layout>
   );
 }
