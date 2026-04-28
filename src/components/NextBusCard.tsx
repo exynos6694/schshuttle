@@ -20,9 +20,16 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
 
   // Intersection Observer for sticky state
   useEffect(() => {
+    // safe area 높이를 읽어와 rootMargin에 반영
+    const safeAreaTop = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-top)') || '0',
+      10
+    ) || 0;
+    const marginTop = -(safeAreaTop + 17);
+
     const observer = new IntersectionObserver(
       ([e]) => setIsSticky(e.intersectionRatio < 1),
-      { threshold: [1], rootMargin: '-17px 0px 0px 0px' }
+      { threshold: [1], rootMargin: `${marginTop}px 0px 0px 0px` }
     );
     
     if (cardRef.current) {
