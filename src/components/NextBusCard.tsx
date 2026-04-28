@@ -89,21 +89,23 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
   return (
     <div ref={cardRef} className="mx-4 mt-2 mb-4 relative z-30 sticky transition-all duration-300" style={{ top: 'calc(1rem + env(safe-area-inset-top))' }}>
       <motion.div
-        layout
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100/50 overflow-hidden transition-all duration-500 ease-in-out ${
-          isSticky ? 'p-4' : 'p-6'
+        transition={{ duration: 0.4 }}
+        className={`bg-white/90 backdrop-blur-md border border-slate-100/50 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+          isSticky 
+            ? 'p-4 rounded-xl shadow-lg' 
+            : 'p-6 rounded-2xl shadow-xl'
         }`}
       >
         {/* 상단 라인: 타이틀 + 시간/목적지 정보 */}
-        <motion.div layout className={`flex justify-between items-center ${isSticky ? '' : 'mb-2'}`}>
-          <motion.div layout className="flex items-center gap-1.5">
+        <div className={`flex justify-between items-center transition-all duration-300 ${isSticky ? '' : 'mb-2'}`}>
+          <div className="flex items-center gap-1.5">
             <span className={`font-bold text-sm uppercase tracking-wider ${nextBus.hasNoShuttle ? 'text-slate-400' : 'text-slate-500'}`}>
               {nextBus.hasNoShuttle ? 'Next Subway' : 'Next Bus'}
             </span>
-          </motion.div>
-          <motion.div layout className="flex gap-1.5 items-center">
+          </div>
+          <div className="flex gap-1.5 items-center">
             {nextBus.isExpress && (
               <div className="bg-red-50 text-red-600 px-2.5 py-1 rounded-full text-[10px] font-bold">
                 급행
@@ -142,17 +144,18 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                 )}
               </div>
             )}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* 메인 시간 표시 (비 Sticky 모드일 때만 보임) */}
         <AnimatePresence>
           {!isSticky && (
             <motion.div
-              layout
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+              style={{ overflow: 'hidden' }}
               className="flex flex-col"
             >
               <div className="flex items-baseline mt-2 relative">
