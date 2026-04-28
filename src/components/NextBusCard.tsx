@@ -74,7 +74,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
     : 0;
 
   return (
-    <div ref={cardRef} className="mx-4 mt-2 mb-4 relative z-30 sticky top-4 transition-all duration-300">
+    <div ref={cardRef} className="mx-4 mt-2 mb-4 relative z-30 sticky transition-all duration-300" style={{ top: 'calc(1rem + env(safe-area-inset-top))' }}>
       <motion.div
         layout
         initial={{ opacity: 0, y: 20 }}
