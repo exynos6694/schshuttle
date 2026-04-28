@@ -86,7 +86,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
                       <span className={`flex items-center gap-1 mt-0.5 transition-colors ${bus.hasNoShuttle ? 'text-lg font-bold text-slate-700' : 'text-xs text-slate-400'}`}>
                         {bus.hasNoShuttle ? '전철탑승:' : '지하철:'} {bus.trainTime}
                         {bus.destination && <span className={bus.hasNoShuttle ? 'text-sm text-slate-500 font-medium' : ''}>({bus.destination})</span>}
-                        {bus.isExpress && <span className="text-red-500 font-bold ml-1">급행</span>}
+                        {bus.isExpress && <span className={`text-red-500 font-bold ml-1 ${bus.hasNoShuttle ? 'text-xs' : ''}`}>급행</span>}
                       </span>
                     )}
                   </div>

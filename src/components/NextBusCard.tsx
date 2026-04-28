@@ -108,7 +108,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
           <div className="flex gap-1.5 items-center">
             {nextBus.isExpress && (
               <div className="bg-red-50 text-red-600 px-2.5 py-1 rounded-full text-[10px] font-bold">
-                급행
+                {isSticky ? '급' : '급행'}
               </div>
             )}
             {nextBus.destination && (
