@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 import type { ShuttleTime } from '../data/schedule';
 import { getTimeRemaining, formatBusTime } from '../utils/timeUtils';
+import { useNow } from '../hooks/useNow';
 
 interface NextBusCardProps {
   nextBuses: ShuttleTime[]; // [가장 가까운 버스, 다다음 버스]
@@ -10,10 +11,10 @@ interface NextBusCardProps {
 }
 
 export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDay }) => {
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [followingTimeLeft, setFollowingTimeLeft] = useState<number | null>(null);
   const [isSticky, setIsSticky] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  // 남은 시간 카운트다운 — 10초 단위로 갱신(출발/임박 전환 반응성)
+  const now = useNow(10_000);
 
   const nextBus = nextBuses.length > 0 ? nextBuses[0] : null;
   const followingBus = nextBuses.length > 1 ? nextBuses[1] : null;
@@ -45,20 +46,6 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!nextBus) return;
-    const update = () => {
-      const now = new Date();
-      setTimeLeft(getTimeRemaining(nextBus, now));
-      if (followingBus) {
-        setFollowingTimeLeft(getTimeRemaining(followingBus, now));
-      }
-    };
-    update();
-    const timer = setInterval(update, 1000 * 30); // Update every 30s
-    return () => clearInterval(timer);
-  }, [nextBus, followingBus]);
-
   if (!isServiceDay) {
     return (
       <div className="mx-4 mt-4 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 flex flex-col items-center justify-center text-slate-400 min-h-[200px]">
@@ -77,14 +64,16 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
     );
   }
 
-  const isImminent = timeLeft !== null && timeLeft <= 5;
-  const isDeparting = timeLeft !== null && timeLeft <= 0;
+  // 가드 통과 후 nextBus는 항상 존재하므로 남은 시간을 직접 계산
+  const timeLeft = getTimeRemaining(nextBus, now);
+  const followingTimeLeft = followingBus ? getTimeRemaining(followingBus, now) : null;
 
-  // 최대 대기시간(30분) 기준으로 차오르는 퍼센테이지 계산 (30분 이상 남았을 때는 게이지가 0에서 대기)
+  const isImminent = timeLeft <= 5;
+  const isDeparting = timeLeft <= 0;
+
+  // 최대 대기시간(40분) 기준으로 차오르는 퍼센테이지 계산 (40분 이상 남았을 때는 게이지가 0에서 대기)
   const maxWaitTime = 40;
-  const progressPercent = timeLeft !== null 
-    ? Math.max(0, Math.min(100, ((maxWaitTime - timeLeft) / maxWaitTime) * 100))
-    : 0;
+  const progressPercent = Math.max(0, Math.min(100, ((maxWaitTime - timeLeft) / maxWaitTime) * 100));
 
   return (
     <div ref={cardRef} className="mx-4 mt-2 mb-4 relative z-30 sticky transition-all duration-300" style={{ top: 'calc(1rem + env(safe-area-inset-top))' }}>
@@ -128,7 +117,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                 ) : (
                   <div className="flex items-baseline gap-1">
                     {isImminent && <span className="bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded font-bold animate-pulse">임박</span>}
-                    {timeLeft !== null && timeLeft >= 60 && (
+                    {timeLeft >= 60 && (
                       <>
                         <span className={`text-xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
                           {Math.floor(timeLeft / 60)}
@@ -137,7 +126,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                       </>
                     )}
                     <span className={`text-xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
-                      {timeLeft !== null ? timeLeft % 60 : 0}
+                      {timeLeft % 60}
                     </span>
                     <span className="text-xs font-bold text-slate-500">분 뒤</span>
                   </div>
@@ -172,7 +161,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                     {isImminent && (
                       <span className="absolute -inset-4 rounded-full bg-red-100/50 animate-ping -z-10" />
                     )}
-                    {timeLeft !== null && timeLeft >= 60 && (
+                    {timeLeft >= 60 && (
                       <>
                         <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${
                           isImminent ? 'text-red-500' : nextBus.hasNoShuttle ? 'bg-gradient-to-r from-slate-500 to-slate-400 bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
@@ -185,7 +174,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                     <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${
                       isImminent ? 'text-red-500' : nextBus.hasNoShuttle ? 'bg-gradient-to-r from-slate-500 to-slate-400 bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'
                     }`}>
-                      {timeLeft !== null ? timeLeft % 60 : 0}
+                      {timeLeft % 60}
                     </span>
                     <span className={`text-xl ml-2 font-bold ${isImminent ? 'text-red-400' : 'text-slate-400'}`}>분 뒤</span>
                     {isImminent && <span className="absolute top-0 -right-12 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse">임박</span>}

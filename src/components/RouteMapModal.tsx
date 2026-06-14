@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface RouteMapModalProps {
   isOpen: boolean;
@@ -8,6 +9,8 @@ interface RouteMapModalProps {
 }
 
 export const RouteMapModal: React.FC<RouteMapModalProps> = ({ isOpen, onClose }) => {
+  useEscapeKey(isOpen, onClose);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -24,6 +27,9 @@ export const RouteMapModal: React.FC<RouteMapModalProps> = ({ isOpen, onClose })
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="fixed left-4 right-4 top-[12vh] bg-white rounded-2xl shadow-xl z-50 overflow-hidden flex flex-col max-h-[75vh]"
+            role="dialog"
+            aria-modal="true"
+            aria-label="정류장 위치 안내"
           >
             <div className="flex items-center justify-between p-4 border-b border-slate-100">
               <div className="flex items-center gap-2">

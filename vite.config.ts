@@ -1,8 +1,24 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        // 무거운 벤더 라이브러리를 별도 청크로 분리해 캐싱/병렬 로드를 개선
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'framer-motion': ['framer-motion'],
+        },
+      },
+    },
+  },
+  test: {
+    environment: 'node',
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+  },
   plugins: [
     react(),
     VitePWA({

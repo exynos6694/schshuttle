@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { ShuttleTime } from '../data/schedule';
 import { formatBusTime, getTimeRemaining } from '../utils/timeUtils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { useNow } from '../hooks/useNow';
 
 interface TimeTableProps {
   schedule: ShuttleTime[];
@@ -11,13 +12,8 @@ interface TimeTableProps {
 
 export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  // 1분마다 현재 시간 업데이트 (남은 시간 계산용)
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
-    return () => clearInterval(timer);
-  }, []);
+  // 남은 시간 계산용 — 분 단위로만 갱신
+  const currentTime = useNow(60_000);
 
   // Find index of next bus
   const nextBusIndex = nextBus 
@@ -64,8 +60,17 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: Math.min(idx, 15) * 0.05 }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isExpanded}
               onClick={() => toggleExpand(originalIndex)}
-              className={`flex flex-col p-4 rounded-xl border transition-all cursor-pointer overflow-hidden ${
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggleExpand(originalIndex);
+                }
+              }}
+              className={`flex flex-col p-4 rounded-xl border transition-all cursor-pointer overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                 isExpanded 
                   ? 'bg-blue-50/50 border-blue-300 shadow-md ring-1 ring-blue-100 border-l-4 border-l-blue-500'
                   : isNext 

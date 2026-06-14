@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 import { TrainFront, School } from 'lucide-react';
 
-export type Route = 'to_station' | 'to_school' | 'loop';
+export type Route = 'to_station' | 'to_school';
 
 interface RouteSelectorProps {
   currentRoute: Route;

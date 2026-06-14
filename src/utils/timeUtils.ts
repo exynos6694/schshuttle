@@ -1,8 +1,9 @@
 import type { ShuttleTime } from '../data/schedule';
 import { differenceInMinutes, set, isAfter, format, isSaturday, isSunday, addDays, subDays } from 'date-fns';
-import Holidays from 'date-holidays';
+import { KR_HOLIDAYS } from '../data/holidays';
 
-const hd = new Holidays('KR');
+/** 대한민국 법정공휴일 여부 (정적 테이블 기반, KR_HOLIDAY_RANGE 범위 밖은 false) */
+const isPublicHoliday = (date: Date): boolean => KR_HOLIDAYS.has(format(date, 'yyyy-MM-dd'));
 
 /**
  * 오늘이 "일요일을 포함한 연휴의 마지막 날"인지 판별합니다.
@@ -12,16 +13,16 @@ const hd = new Holidays('KR');
 export const isLastDayOfHolidayWithSunday = (date: Date): boolean => {
   // 오늘 자체가 운행일(일반 평일)이면 해당 없음
   // 단, 공휴일인 평일은 체크 대상
-  const todayIsHoliday = !!hd.isHoliday(date);
+  const todayIsHoliday = isPublicHoliday(date);
   const todayIsSaturday = isSaturday(date);
   const todayIsSunday = isSunday(date);
-  
+
   // 오늘이 휴일(공휴일/토/일)이 아니면 해당 없음
   if (!todayIsHoliday && !todayIsSaturday && !todayIsSunday) return false;
-  
+
   // 내일이 또 휴일이면 오늘은 "마지막 날"이 아님
   const tomorrow = addDays(date, 1);
-  const tomorrowIsHoliday = !!hd.isHoliday(tomorrow);
+  const tomorrowIsHoliday = isPublicHoliday(tomorrow);
   const tomorrowIsSaturday = isSaturday(tomorrow);
   const tomorrowIsSunday = isSunday(tomorrow);
   if (tomorrowIsHoliday || tomorrowIsSaturday || tomorrowIsSunday) return false;
@@ -32,7 +33,7 @@ export const isLastDayOfHolidayWithSunday = (date: Date): boolean => {
   
   // 최대 14일까지만 체크 (안전장치)
   for (let i = 0; i < 14; i++) {
-    const isHol = !!hd.isHoliday(checkDate);
+    const isHol = isPublicHoliday(checkDate);
     const isSat = isSaturday(checkDate);
     const isSun = isSunday(checkDate);
     
@@ -66,11 +67,8 @@ export const isServiceDay = (date: Date): boolean => {
   // 연휴 마지막 날(일요일 포함 연휴)이면 일요일 시간표로 운행
   if (isLastDayOfHolidayWithSunday(date)) return true;
 
-  // date-holidays checks if given date is a holiday
-  const holidayInstance = hd.isHoliday(date);
-  
-  // if holidayInstance is truthy, it's a holiday
-  return !holidayInstance; // 토요일 외 일요일은 운행
+  // 법정공휴일이면 미운행 (토요일 외 일요일은 운행)
+  return !isPublicHoliday(date);
 };
 
 export const getNextBuses = (schedule: ShuttleTime[], currentTime: Date, count: number = 2): ShuttleTime[] => {

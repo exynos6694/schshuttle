@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface TermsModalProps {
   isOpen: boolean;
@@ -8,6 +9,8 @@ interface TermsModalProps {
 }
 
 export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
+  useEscapeKey(isOpen, onClose);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -28,6 +31,9 @@ export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
             exit={{ opacity: 0, y: 60 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="fixed inset-x-4 top-8 bottom-8 z-50 flex items-center justify-center"
+            role="dialog"
+            aria-modal="true"
+            aria-label="이용약관"
           >
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-full flex flex-col overflow-hidden">
               {/* Header */}

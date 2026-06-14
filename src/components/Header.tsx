@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Bus, Map } from 'lucide-react';
+import { useNow } from '../hooks/useNow';
 
 interface HeaderProps {
   isVacation: boolean;
@@ -10,12 +11,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ isVacation, onToggleVacation, onOpenMap }) => {
-  const [time, setTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // HH:mm 표시 → 분 단위로만 갱신
+  const time = useNow(60_000);
 
   return (
     <header className="px-6 pt-8 pb-6 text-white" style={{ paddingTop: 'calc(2rem + env(safe-area-inset-top))' }}>

@@ -1,4 +1,4 @@
-export type ShuttleType = 'to_station' | 'to_school' | 'loop';
+export type ShuttleType = 'to_station' | 'to_school';
 
 export interface ShuttleTime {
   hour: number;
@@ -98,7 +98,7 @@ export const TO_SCHOOL_SCHEDULE: ShuttleTime[] = [
   { hour: 21, minute: 11, type: 'to_school', trainTime: '21:06' },
   { hour: 21, minute: 39, type: 'to_school', trainTime: '21:34' },
   { hour: 21, minute: 52, type: 'to_school', trainTime: '21:47' },
-];;
+];
 
 export const VACATION_TO_STATION_SCHEDULE: ShuttleTime[] = [
   { hour: 12, minute: 3, type: 'to_station', trainTime: '12:28', destination: '광운대', isExpress: false },
@@ -163,16 +163,3 @@ export const WEEKEND_TO_STATION_SCHEDULE: ShuttleTime[] = [
   { hour: 21, minute: 28, type: 'to_station' },
   { hour: 21, minute: 45, type: 'to_station' },
 ];
-
-// Campus Loop: 08:20 - 18:00, every 10 mins (Keep existing logic as fallback or separate tab)
-export const getLoopSchedule = (): ShuttleTime[] => {
-  const schedule: ShuttleTime[] = [];
-  for (let h = 8; h <= 18; h++) {
-    for (let m = 0; m < 60; m += 10) {
-      if (h === 8 && m < 20) continue; // Start 08:20
-      if (h === 18 && m > 0) continue; // End 18:00
-      schedule.push({ hour: h, minute: m, type: 'loop' });
-    }
-  }
-  return schedule;
-};
