@@ -81,9 +81,9 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className={`bg-white/90 backdrop-blur-md border border-slate-100/50 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
-          isSticky 
-            ? 'p-4 rounded-xl shadow-lg' 
+        className={`bg-white/90 backdrop-blur-md border border-slate-100/50 overflow-hidden transition-[padding,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+          isSticky
+            ? 'p-4 rounded-xl shadow-lg'
             : 'p-6 rounded-2xl shadow-xl'
         }`}
       >
@@ -113,10 +113,10 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
             {isSticky && (
               <div className="ml-2 border-l border-slate-200 pl-3">
                 {isDeparting ? (
-                  <span className="text-sm font-bold text-red-500 animate-pulse">출발</span>
+                  <span className="text-sm font-bold text-red-500 motion-safe:animate-pulse">출발</span>
                 ) : (
                   <div className="flex items-baseline gap-1">
-                    {isImminent && <span className="bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded font-bold animate-pulse">임박</span>}
+                    {isImminent && <span className="bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded font-bold motion-safe:animate-pulse">임박</span>}
                     {timeLeft >= 60 && (
                       <>
                         <span className={`text-xl font-black tracking-tighter ${isImminent ? 'text-red-500' : 'text-slate-900'}`}>
@@ -151,7 +151,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                 {isDeparting ? (
                   <div className="flex items-center gap-3">
                     <span className="relative flex h-4 w-4">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
                     </span>
                     <span className="text-4xl font-black text-red-500 tracking-tight">출발</span>
@@ -159,7 +159,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                 ) : (
                   <div className="relative flex items-baseline">
                     {isImminent && (
-                      <span className="absolute -inset-4 rounded-full bg-red-100/50 animate-ping -z-10" />
+                      <span className="absolute -inset-4 rounded-full bg-red-100/50 motion-safe:animate-ping -z-10" />
                     )}
                     {timeLeft >= 60 && (
                       <>
@@ -177,7 +177,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                       {timeLeft % 60}
                     </span>
                     <span className={`text-xl ml-2 font-bold ${isImminent ? 'text-red-400' : 'text-slate-400'}`}>분 뒤</span>
-                    {isImminent && <span className="absolute top-0 -right-12 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse">임박</span>}
+                    {isImminent && <span className="absolute top-0 -right-12 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold motion-safe:animate-pulse">임박</span>}
                   </div>
                 )}
               </div>
@@ -190,7 +190,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
                     animate={{ width: isDeparting ? "100%" : `${progressPercent}%` }}
                     transition={{ duration: 1 }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent motion-safe:animate-shimmer" />
                   </motion.div>
                 </div>
                 <p className="text-xs text-slate-400 mt-2 text-right">

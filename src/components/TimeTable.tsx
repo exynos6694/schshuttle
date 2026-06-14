@@ -127,7 +127,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ schedule, nextBus }) => {
                         {isPast ? (
                           <span className="text-sm font-bold text-slate-400">출발 완료</span>
                         ) : timeLeft <= 0 ? (
-                          <span className="text-sm font-bold text-red-500 animate-pulse">출발 임박</span>
+                          <span className="text-sm font-bold text-red-500 motion-safe:animate-pulse">출발 임박</span>
                         ) : (
                           <div className="flex items-baseline gap-1">
                             {timeLeft >= 60 && (

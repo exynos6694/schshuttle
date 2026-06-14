@@ -7,14 +7,15 @@ export const InstallPrompt: React.FC = () => {
   const { isInstallable, isInstalled, isIOS, promptInstall, setIsInstallable } = usePWA();
   const [dismissed, setDismissed] = useState(false);
 
-  // 이미 설치되었거나, 설치 대상이 아니거나, 사용자가 팝업을 닫았다면 렌더링하지 않음
-  if (isInstalled || !isInstallable || dismissed) {
-    return null;
-  }
+  // 이미 설치되었거나, 설치 대상이 아니거나, 사용자가 팝업을 닫았다면 표시하지 않음
+  // (조건을 AnimatePresence 안에 두어야 닫힐 때 exit 애니메이션이 재생됨)
+  const visible = !(isInstalled || !isInstallable || dismissed);
 
   return (
     <AnimatePresence>
+      {visible && (
       <motion.div
+        key="install-prompt"
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
@@ -65,6 +66,7 @@ export const InstallPrompt: React.FC = () => {
           </div>
         </div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 };
