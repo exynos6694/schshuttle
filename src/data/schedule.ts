@@ -100,33 +100,37 @@ export const TO_SCHOOL_SCHEDULE: ShuttleTime[] = [
   { hour: 21, minute: 52, type: 'to_school', trainTime: '21:47' },
 ];
 
+// 하계방학 시간표 (2026.06.22 월 ~ 08.28 금)
+// 하교(학교 후문 출발): hour:minute=순환출발, trainTime=전철출발(동문 기준 25분 후)
+// ※ 방학 중 10분 간격 순환셔틀 없음 / 일요일 운행 없음
 export const VACATION_TO_STATION_SCHEDULE: ShuttleTime[] = [
-  { hour: 12, minute: 3, type: 'to_station', trainTime: '12:28', destination: '광운대', isExpress: false },
-  { hour: 12, minute: 28, type: 'to_station', trainTime: '12:53', destination: '광운대', isExpress: false },
+  { hour: 11, minute: 35, type: 'to_station', trainTime: '12:00', destination: '청량리', isExpress: false },
+  { hour: 11, minute: 58, type: 'to_station', trainTime: '12:23', destination: '광운대', isExpress: false },
+  { hour: 12, minute: 27, type: 'to_station', trainTime: '12:52', destination: '광운대', isExpress: false },
   { hour: 12, minute: 51, type: 'to_station', trainTime: '13:16', destination: '청량리', isExpress: true },
   { hour: 13, minute: 12, type: 'to_station', trainTime: '13:37', destination: '청량리', isExpress: true },
   { hour: 13, minute: 33, type: 'to_station', trainTime: '13:58', destination: '광운대', isExpress: false },
-  { hour: 13, minute: 56, type: 'to_station', trainTime: '14:21', destination: '광운대', isExpress: false },
+  { hour: 13, minute: 53, type: 'to_station', trainTime: '14:18', destination: '광운대', isExpress: false },
   { hour: 14, minute: 23, type: 'to_station', trainTime: '14:48', destination: '광운대', isExpress: false },
   { hour: 14, minute: 48, type: 'to_station', trainTime: '15:13', destination: '청량리', isExpress: true },
-  { hour: 15, minute: 26, type: 'to_station', trainTime: '15:51', destination: '광운대', isExpress: false },
+  { hour: 15, minute: 38, type: 'to_station', trainTime: '16:03', destination: '광운대', isExpress: false },
   { hour: 16, minute: 14, type: 'to_station', trainTime: '16:39', destination: '광운대', isExpress: false },
   { hour: 16, minute: 30, type: 'to_station', trainTime: '16:55', destination: '광운대', isExpress: false },
   { hour: 17, minute: 8, type: 'to_station', trainTime: '17:33', destination: '광운대', isExpress: false },
-  { hour: 17, minute: 47, type: 'to_station', trainTime: '18:12', destination: '청량리', isExpress: true },
+  { hour: 17, minute: 43, type: 'to_station', trainTime: '18:08', destination: '청량리', isExpress: true },
 ];
 
+// 등교(신창역 출발): hour:minute=셔틀출발, trainTime=전철도착
 export const VACATION_TO_SCHOOL_SCHEDULE: ShuttleTime[] = [
   { hour: 7, minute: 51, type: 'to_school', trainTime: '07:46' },
-  { hour: 8, minute: 30, type: 'to_school', trainTime: '08:25' },
+  { hour: 8, minute: 31, type: 'to_school', trainTime: '08:26', isExpress: true },
   { hour: 8, minute: 50, type: 'to_school', trainTime: '08:45' },
-  { hour: 9, minute: 40, type: 'to_school', trainTime: '09:35' },
-  { hour: 10, minute: 1, type: 'to_school', trainTime: '09:56' },
-  { hour: 10, minute: 22, type: 'to_school', trainTime: '10:17' },
+  { hour: 9, minute: 27, type: 'to_school', trainTime: '09:22', isExpress: true },
+  { hour: 9, minute: 55, type: 'to_school', trainTime: '09:50' },
+  { hour: 10, minute: 16, type: 'to_school', trainTime: '10:11', isExpress: true },
   { hour: 10, minute: 48, type: 'to_school', trainTime: '10:43' },
-  { hour: 11, minute: 12, type: 'to_school', trainTime: '11:07' },
+  { hour: 11, minute: 13, type: 'to_school', trainTime: '11:08' },
   { hour: 11, minute: 42, type: 'to_school', trainTime: '11:37' },
-  { hour: 11, minute: 57, type: 'to_school', trainTime: '11:52' },
 ];
 
 export const WEEKEND_TO_SCHOOL_SCHEDULE: ShuttleTime[] = [

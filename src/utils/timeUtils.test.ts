@@ -5,6 +5,7 @@ import {
   formatBusTime,
   isServiceDay,
   isLastDayOfHolidayWithSunday,
+  isVacationPeriod,
 } from './timeUtils';
 import { TO_STATION_SCHEDULE } from '../data/schedule';
 
@@ -46,6 +47,22 @@ describe('isLastDayOfHolidayWithSunday', () => {
 
   it('단발성 평일 공휴일은 false', () => {
     expect(isLastDayOfHolidayWithSunday(at(2026, 1, 1))).toBe(false);
+  });
+});
+
+describe('isVacationPeriod', () => {
+  it('2026 하계방학(6/22~8/28) 안이면 true', () => {
+    expect(isVacationPeriod(at(2026, 7, 15))).toBe(true);
+  });
+
+  it('시작일·종료일은 포함(경계)', () => {
+    expect(isVacationPeriod(at(2026, 6, 22))).toBe(true);
+    expect(isVacationPeriod(at(2026, 8, 28))).toBe(true);
+  });
+
+  it('기간 밖이면 false', () => {
+    expect(isVacationPeriod(at(2026, 6, 21))).toBe(false);
+    expect(isVacationPeriod(at(2026, 8, 29))).toBe(false);
   });
 });
 

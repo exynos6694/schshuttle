@@ -71,6 +71,17 @@ export const isServiceDay = (date: Date): boolean => {
   return !isPublicHoliday(date);
 };
 
+// 방학 기간 (자동 전환용). 새 방학/학기 공지 시 갱신.
+const VACATION_PERIODS: { start: string; end: string }[] = [
+  { start: '2026-06-22', end: '2026-08-28' }, // 2026 하계방학
+];
+
+/** 해당 날짜가 방학 기간(자동 전환 대상)에 속하는지 */
+export const isVacationPeriod = (date: Date): boolean => {
+  const d = format(date, 'yyyy-MM-dd');
+  return VACATION_PERIODS.some((p) => d >= p.start && d <= p.end);
+};
+
 export const getNextBuses = (schedule: ShuttleTime[], currentTime: Date, count: number = 2): ShuttleTime[] => {
   if (!isServiceDay(currentTime)) {
     return [];

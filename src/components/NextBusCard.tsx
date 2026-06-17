@@ -50,7 +50,7 @@ export const NextBusCard: React.FC<NextBusCardProps> = ({ nextBuses, isServiceDa
     return (
       <div className="mx-4 mt-4 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 flex flex-col items-center justify-center text-slate-400 min-h-[200px]">
         <AlertCircle className="w-12 h-12 mb-2 opacity-50" />
-        <p>토요일 및 공휴일은 운행하지 않습니다</p>
+        <p>오늘은 셔틀버스를 운행하지 않습니다</p>
       </div>
     );
   }
